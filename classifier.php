@@ -76,10 +76,20 @@ $new_categories = [
 echo "Estrutura Antiga<br>";
 echo "<pre>";
 print_r(createTree($old_categories));
-
+echo "Deixando na estrutura nova <br>";
+$old_categories_new_structure = array_filter_by_name(createTree($old_categories));
+print_r($old_categories_new_structure);
 echo "Estrutura Nova<br>";
 echo "<pre>";
 print_r($new_categories);
+
+echo "Exemplos de busca Estrutura Antiga..<br>";
+echo "Busca Copa do Mundo<br>";
+echo "<pre>";
+print_r(array_find_deep($old_categories_new_structure,"Copa do Mundo"));
+echo "Busca Futebol<br>";
+echo "<pre>";
+print_r(array_find_deep($old_categories_new_structure,"Futebol"));
 
 echo "Exemplos de busca..<br>";
 echo "Busca Copa do Mundo<br>";
@@ -89,6 +99,21 @@ echo "Busca Futebol<br>";
 echo "<pre>";
 print_r(array_find_deep($new_categories,"Futebol"));
 
+function array_filter_by_name($array)
+{	
+	$out = array();
+	foreach ($array as $key => $value) {
+			if( !empty($value['children']) && is_array($value['children'])){
+				$out[$value['name']] = array_filter_by_name($value['children']);
+			} else {
+				$out = [
+					$value['name']
+				];
+			}
+	}
+
+	return $out;
+}
 
 function array_find_deep($array, $search, $keys = array())
 {
